@@ -386,5 +386,4 @@ struct RowsetId {
         return out;
     }
 };
-
 } // namespace doris

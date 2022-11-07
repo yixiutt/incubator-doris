@@ -930,6 +930,12 @@ Status BetaRowsetWriter::_flush_segment_writer(std::unique_ptr<segment_v2::Segme
         std::lock_guard<std::mutex> lock(_segid_statistics_map_mutex);
         CHECK_EQ(_segid_statistics_map.find(segid) == _segid_statistics_map.end(), true);
         _segid_statistics_map.emplace(segid, segstat);
+
+        std::lock_guard<SpinLock> l(_lock);
+        _segment_num_rows.resize(_num_segment);
+        _segments_encoded_key_bounds.resize(_num_segment);
+        _segment_num_rows[(*writer)->get_segment_id()] = (*writer)->row_count();
+        _segments_encoded_key_bounds[(*writer)->get_segment_id()] = key_bounds;
     }
     VLOG_DEBUG << "_segid_statistics_map add new record. segid:" << segid << " row_num:" << row_num
                << " data_size:" << segment_size << " index_size:" << index_size;

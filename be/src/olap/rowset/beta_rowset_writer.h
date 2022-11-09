@@ -64,6 +64,8 @@ public:
     // for this segment
     RowsetSharedPtr build_tmp() override;
 
+    RowsetSharedPtr manual_build(const RowsetMetaSharedPtr& rowset_meta) override;
+
     Version version() override { return _context.version; }
 
     int64_t num_rows() const override { return _raw_num_rows_written; }
@@ -119,6 +121,13 @@ private:
     bool _check_and_set_is_doing_segcompaction();
 
     Status _do_compact_segments(SegCompactionCandidatesSharedPtr segments);
+
+    Status _flush_segment_writer(std::unique_ptr<segment_v2::SegmentWriter>* writer);
+
+    void _build_rowset_meta(RowsetMetaSharedPtr rowset_meta);
+    void _build_rowset_meta_with_spec_field(RowsetMetaSharedPtr rowset_meta,
+                                            const RowsetMetaSharedPtr& spec_rowset_meta);
+    bool _is_segment_overlapping();
 
 protected:
     RowsetWriterContext _context;

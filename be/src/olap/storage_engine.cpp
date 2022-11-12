@@ -134,11 +134,6 @@ StorageEngine::~StorageEngine() {
     if (_cumu_compaction_thread_pool) {
         _cumu_compaction_thread_pool->shutdown();
     }
-
-    if (_quick_compaction_thread_pool) {
-        _quick_compaction_thread_pool->shutdown();
-    }
-
     if (_seg_compaction_thread_pool) {
         _seg_compaction_thread_pool->shutdown();
     }
